@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">PokeKMP</string>
+    <string name="pokedex_title">Pokédex</string>
+    <string name="loading_pokemon">Loading Pokémon…</string>
+    <string name="error_title">Oops! Something went wrong</string>
+    <string name="error_message">Unable to load Pokémon data. Please try again later.</string>
+    <string name="tap_to_view_details">Tap to view details</string>
+</resources>
