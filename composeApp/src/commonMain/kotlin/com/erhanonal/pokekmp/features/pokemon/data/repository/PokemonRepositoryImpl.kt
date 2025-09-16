@@ -3,7 +3,7 @@ package com.erhanonal.pokekmp.features.pokemon.data.repository
 import com.erhanonal.pokekmp.features.pokemon.data.model.PokemonListResponseModel
 import com.erhanonal.pokekmp.features.pokemon.data.model.PokemonNetworkModel
 import com.erhanonal.pokekmp.features.pokemon.data.service.PokemonService
-import com.erhanonal.pokekmp.features.pokemon.domain.model.BaseResult
+import com.erhanonal.pokekmp.common.model.BaseResult
 import com.erhanonal.pokekmp.features.pokemon.domain.model.PokemonModel
 import com.erhanonal.pokekmp.features.pokemon.domain.repository.PokemonRepository
 import com.erhanonal.pokekmp.features.pokemon.domain.usecase.PokemonListError
