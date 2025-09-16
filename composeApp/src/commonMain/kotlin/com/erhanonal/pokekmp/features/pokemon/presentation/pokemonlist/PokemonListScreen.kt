@@ -61,7 +61,7 @@ private fun PokemonListScreenError() {
 private fun PokemonListScreenSuccess(state: PokemonListUiState.Success) {
     LazyColumn {
         items(state.items) { model ->
-            Text(text = model.id)
+            Text(text = model.name)
         }
     }
 }

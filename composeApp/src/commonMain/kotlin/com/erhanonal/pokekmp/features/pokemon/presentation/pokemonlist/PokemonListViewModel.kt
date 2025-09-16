@@ -39,7 +39,7 @@ class PokemonListViewModel(
 
     private fun PokemonModel.toUiModel(): PokemonUiModel {
         return PokemonUiModel(
-            id = id
+            name = name
         )
     }
 }

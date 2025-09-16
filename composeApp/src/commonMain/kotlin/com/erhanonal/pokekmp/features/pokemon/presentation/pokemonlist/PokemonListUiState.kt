@@ -7,5 +7,5 @@ sealed interface PokemonListUiState {
 }
 
 data class PokemonUiModel(
-    val id: String
+    val name: String
 )
