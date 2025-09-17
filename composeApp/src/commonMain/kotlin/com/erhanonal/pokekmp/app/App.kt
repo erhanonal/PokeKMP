@@ -13,7 +13,7 @@ import org.koin.compose.KoinApplication
 fun App() {
     KoinApplication(
         application = {
-            modules(pokemonModule, commonModule)
+            modules(koinModules)
         }
     ) {
         val navController = rememberNavController()

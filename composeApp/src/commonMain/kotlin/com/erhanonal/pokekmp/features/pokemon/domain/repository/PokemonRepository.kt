@@ -1,10 +1,14 @@
 package com.erhanonal.pokekmp.features.pokemon.domain.repository
 
 import com.erhanonal.pokekmp.common.model.BaseResult
+import com.erhanonal.pokekmp.features.pokemon.domain.model.PokemonDetailModel
 import com.erhanonal.pokekmp.features.pokemon.domain.model.PokemonModel
+import com.erhanonal.pokekmp.features.pokemon.domain.usecase.PokemonDetailError
 import com.erhanonal.pokekmp.features.pokemon.domain.usecase.PokemonListError
 
 interface PokemonRepository {
 
     suspend fun getPokemonList(): BaseResult<List<PokemonModel>, PokemonListError>
+
+    suspend fun getPokemonDetail(pokemonName: String): BaseResult<PokemonDetailModel, PokemonDetailError>
 }
