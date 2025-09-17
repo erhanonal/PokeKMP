@@ -5,8 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.erhanonal.pokekmp.common.model.BaseResult
 import com.erhanonal.pokekmp.features.pokemon.domain.model.PokemonModel
 import com.erhanonal.pokekmp.features.pokemon.domain.usecase.GetPokemonListUseCase
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -19,9 +21,20 @@ class PokemonListViewModel(
 
     val uiState = _uiState.asStateFlow()
 
+    private val _events = Channel<PokemonListEvent>()
+    val events = _events.receiveAsFlow()
+
     fun handleAction(action: PokemonListAction) {
         when (action) {
             is PokemonListAction.FetchData -> getPokemonList()
+            is PokemonListAction.OnPokemonClick ->
+                viewModelScope.launch {
+                    _events.send(
+                        PokemonListEvent.NavigateToPokemonDetail(
+                            action.pokemonName
+                        )
+                    )
+                }
         }
     }
 

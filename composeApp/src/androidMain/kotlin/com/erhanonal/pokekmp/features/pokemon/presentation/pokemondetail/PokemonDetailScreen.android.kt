@@ -1,27 +1,23 @@
-package com.erhanonal.pokekmp.features.pokemon.presentation.pokemonlist
+package com.erhanonal.pokekmp.features.pokemon.presentation.pokemondetail
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -43,59 +39,49 @@ import pokekmp.composeapp.generated.resources.Res
 import pokekmp.composeapp.generated.resources.error_message
 import pokekmp.composeapp.generated.resources.error_title
 import pokekmp.composeapp.generated.resources.loading_pokemon
-import pokekmp.composeapp.generated.resources.pokedex_title
-import pokekmp.composeapp.generated.resources.tap_to_view_details
 
 @Composable
-fun PokemonListScreen(
-    viewModel: PokemonListViewModel = koinViewModel(),
-    onNavigateToPokemonDetail: (String) -> Unit
-) {
+actual fun PokemonDetailScreen(pokemonName: String, onBackClick: () -> Unit) {
+    val viewModel: PokemonDetailViewModel = koinViewModel()
+
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.events.collect { event ->
-            when (event) {
-                is PokemonListEvent.NavigateToPokemonDetail -> {
-                    onNavigateToPokemonDetail(event.pokemonName)
-                }
-            }
-        }
+        viewModel.handleAction(PokemonDetailAction.FetchData(pokemonName))
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.handleAction(PokemonListAction.FetchData)
-    }
-
-
-    PokemonListScreenContent(
+    PokemonDetailScreenContent(
         state = state,
-        onPokemonClick = { pokemonName ->
-            viewModel.handleAction(
-                PokemonListAction.OnPokemonClick(
-                    pokemonName
-                )
-            )
-        }
+        onBackClick = onBackClick
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun PokemonListScreenContent(
-    state: PokemonListUiState,
-    onPokemonClick: (String) -> Unit
+fun PokemonDetailScreenContent(
+    state: PokemonDetailUiState,
+    onBackClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = stringResource(Res.string.pokedex_title),
+                        text = (state as? PokemonDetailUiState.Success)?.pokemonName.orEmpty()
+                            .replaceFirstChar { it.uppercase() },
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimary
                     )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary
@@ -106,14 +92,13 @@ private fun PokemonListScreenContent(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)
         ) {
             when (state) {
-                is PokemonListUiState.Loading -> PokemonListScreenLoading()
-                is PokemonListUiState.Error -> PokemonListScreenError()
-                is PokemonListUiState.Success -> PokemonListScreenSuccess(
-                    state = state,
-                    contentPadding = paddingValues,
-                    onPokemonClick = onPokemonClick
+                is PokemonDetailUiState.Loading -> PokemonDetailScreenLoading()
+                is PokemonDetailUiState.Error -> PokemonDetailScreenError()
+                is PokemonDetailUiState.Success -> PokemonDetailScreenSuccess(
+                    state = state
                 )
             }
         }
@@ -121,7 +106,7 @@ private fun PokemonListScreenContent(
 }
 
 @Composable
-private fun PokemonListScreenLoading() {
+private fun PokemonDetailScreenLoading() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -163,7 +148,7 @@ private fun PokemonListScreenLoading() {
 }
 
 @Composable
-private fun PokemonListScreenError() {
+private fun PokemonDetailScreenError() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -199,78 +184,57 @@ private fun PokemonListScreenError() {
 }
 
 @Composable
-private fun PokemonListScreenSuccess(
-    state: PokemonListUiState.Success,
-    contentPadding: PaddingValues,
-    onPokemonClick: (String) -> Unit
-) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(horizontal = SpacingValue.X4),
-        contentPadding = contentPadding
+private fun PokemonDetailScreenSuccess(state: PokemonDetailUiState.Success) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        items(
-            items = state.items,
-            key = { model -> model.name }
-        ) { model ->
-            PokemonListItem(model = model, onPokemonClick = onPokemonClick)
-        }
-    }
-}
-
-@Composable
-private fun PokemonListItem(
-    model: PokemonUiModel,
-    onPokemonClick: (String) -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = SpacingValue.X2),
-        shape = RoundedCornerShape(SpacingValue.X4),
-        elevation = CardDefaults.cardElevation(defaultElevation = SpacingValue.X2),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
-    ) {
-        Row(
+        Surface(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(SpacingValue.X5)
-                .clickable { onPokemonClick(model.name) },
-            verticalAlignment = Alignment.CenterVertically
+                .clip(RoundedCornerShape(SpacingValue.X6))
+                .padding(SpacingValue.X4),
+            color = MaterialTheme.colorScheme.surface,
+            shadowElevation = SpacingValue.X2
         ) {
-            Box(
-                modifier = Modifier
-                    .size(SpacingValue.X14)
-                    .background(
-                        MaterialTheme.colorScheme.primaryContainer,
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = model.displayName.first().toString().uppercase(),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            Spacer(modifier = Modifier.width(SpacingValue.X4))
-
             Column(
-                modifier = Modifier.weight(1f)
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(SpacingValue.X8)
             ) {
+                Box(
+                    modifier = Modifier
+                        .size(SpacingValue.X20)
+                        .background(
+                            MaterialTheme.colorScheme.primaryContainer,
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = state.pokemonName.first().toString().uppercase(),
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(SpacingValue.X6))
+
                 Text(
-                    text = model.displayName,
-                    style = MaterialTheme.typography.titleLarge,
+                    text = state.pokemonName.replaceFirstChar { it.uppercase() },
+                    style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.height(SpacingValue.X1))
+
+                Spacer(modifier = Modifier.height(SpacingValue.X2))
+
                 Text(
-                    text = stringResource(Res.string.tap_to_view_details),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = "Pokemon details will be loaded here in the future",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
                 )
             }
         }
