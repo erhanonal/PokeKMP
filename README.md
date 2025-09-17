@@ -58,6 +58,13 @@ features are still being implemented.
   - `ktor-client-logging` - Request/response logging
   - `ktor-serialization-kotlinx-json` - Kotlinx serialization integration
 
+### Image Loading
+
+- **Coil3** - Modern image loading library for Android (Compose)
+  - Used in Pokemon detail screen for loading Pokemon artwork
+- **AsyncImage** - Native SwiftUI image loading for iOS
+  - Provides native iOS experience
+
 ### UI & Lifecycle
 
 - **Androidx Lifecycle** - Lifecycle-aware components
@@ -110,8 +117,13 @@ iosApp/
 
 - **Shared ViewModel**: Same business logic and state management across platforms
 - **Platform-specific UI**: Android uses Compose, iOS uses SwiftUI
+- **Image Loading**: Android uses Coil3's `AsyncImage` for Compose, iOS uses native SwiftUI
+  `AsyncImage`
 - **State Synchronization**: iOS wrapper observes Kotlin StateFlow and updates SwiftUI
 - **Native Experience**: Each platform follows its respective design patterns
+- **Koin Integration**: Dependency injection works seamlessly across platforms, with ViewModels
+  injected both in Android and
+  iOS
 
 ## 🔧 Technical Implementation
 
@@ -124,14 +136,9 @@ The iOS side demonstrates advanced KMP integration:
 2. **ViewModel Wrapper**: SwiftUI `ObservableObject` that wraps the shared Kotlin ViewModel
 3. **Native View Factory**: Abstraction layer for creating platform-specific views from shared code
 4. **UIKitViewController**: Bridge between Compose navigation and native iOS screens
+5. **Koin Dependency Injection**: ViewModels are injected using Koin directly in iOS Swift code,
+   enabling seamless dependency management across platforms
 
-## 🎯 Current Features
+For detailed implementation of Koin injection in iOS,
+see: [How to get your Koin dependency in iOS](https://proandroiddev.com/how-to-get-your-koin-dependency-in-ios-efb6d83ee165)
 
-- [x] Pokémon list with loading states
-- [x] Navigation between screens
-- [x] Shared ViewModels with platform-specific UI
-- [x] Network client setup with Ktor
-- [x] Dependency injection with Koin
-- [x] Material 3 theming
-- [x] iOS StateFlow integration
-- [ ] Detailed Pokémon information display
