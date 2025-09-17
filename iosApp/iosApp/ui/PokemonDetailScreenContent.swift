@@ -45,7 +45,11 @@ struct PokemonDetailScreen: View {
         case is PokemonDetailUiStateError:
             PokemonDetailErrorView()
         case let success as PokemonDetailUiStateSuccess:
-            PokemonDetailSuccessView(displayName: success.model.displayName)
+            PokemonDetailSuccessView(
+                displayName: success.model.displayName,
+                imageUrl: success.model.imageUri,
+                types: success.model.types
+            )
         default:
             Text("Unknown state")
                 .foregroundColor(.gray)
@@ -94,27 +98,50 @@ struct PokemonDetailErrorView: View {
 
 struct PokemonDetailSuccessView: View {
     let displayName: String
+    let imageUrl: String
+    let types: [String]
 
     var body: some View {
         VStack(spacing: 16) {
-            Circle()
-                .fill(Color.orange.opacity(0.2))
-                .frame(width: 120, height: 120)
-                .overlay(
-                    Text(displayName.prefix(1))
-                        .font(.system(size: 48, weight: .bold))
-                        .foregroundColor(.orange)
-                )
+
+            AsyncImage(url: URL(string: imageUrl)) { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 80, height: 80)
+                    .background(
+                        Circle().fill(Color.primary.opacity(0.2))
+                    )
+            } placeholder: {
+                EmptyView()
+            }
 
             Text(displayName)
                 .font(.title)
                 .fontWeight(.bold)
 
-            Text("Pokémon details will be loaded here in the future")
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
+            PokemonTypesView(types: types)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(.systemBackground))
+    }
+}
+
+struct PokemonTypesView: View {
+    let types: [String]
+
+    var body: some View {
+        HStack(spacing: 8) {
+            ForEach(types, id: \.self) { type in
+                Text(type.capitalized)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Color.blue.opacity(0.2))
+                    .foregroundColor(.blue)
+                    .cornerRadius(12)
+                    .font(.caption)
+                    .fontWeight(.medium)
+            }
+        }
     }
 }

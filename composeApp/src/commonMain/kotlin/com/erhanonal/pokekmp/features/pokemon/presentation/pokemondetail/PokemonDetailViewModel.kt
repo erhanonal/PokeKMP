@@ -46,6 +46,7 @@ private fun PokemonDetailModel.toUiModel(): PokemonDetailUiModel {
     return PokemonDetailUiModel(
         name = name,
         displayName = name.replaceFirstChar { it.uppercase() },
-        imageUri = imageUri
+        imageUri = imageUri,
+        types = types
     )
 }
