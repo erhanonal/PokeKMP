@@ -3,6 +3,7 @@ package com.erhanonal.pokekmp.features.pokemon.di
 import com.erhanonal.pokekmp.features.pokemon.data.repository.PokemonRepositoryImpl
 import com.erhanonal.pokekmp.features.pokemon.data.service.PokemonService
 import com.erhanonal.pokekmp.features.pokemon.domain.repository.PokemonRepository
+import com.erhanonal.pokekmp.features.pokemon.domain.usecase.GetPokemonDetailUseCase
 import com.erhanonal.pokekmp.features.pokemon.domain.usecase.GetPokemonListUseCase
 import com.erhanonal.pokekmp.features.pokemon.presentation.pokemondetail.PokemonDetailViewModel
 import com.erhanonal.pokekmp.features.pokemon.presentation.pokemonlist.PokemonListViewModel
@@ -17,8 +18,9 @@ val pokemonModule = module {
 
     // Domain
     factory { GetPokemonListUseCase(get()) }
+    factory { GetPokemonDetailUseCase(get()) }
 
     // Presentation
     viewModel { PokemonListViewModel(get()) }
-    viewModel { PokemonDetailViewModel() }
+    viewModel { PokemonDetailViewModel(get()) }
 }

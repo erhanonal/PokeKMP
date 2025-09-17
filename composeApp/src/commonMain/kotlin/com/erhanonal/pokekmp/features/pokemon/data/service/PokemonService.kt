@@ -10,4 +10,7 @@ class PokemonService(private val networkClient: NetworkClient) {
         return networkClient.client.get("pokemon/")
     }
 
+    suspend fun getPokemonDetails(name: String): HttpResponse {
+        return networkClient.client.get("pokemon/$name/")
+    }
 }

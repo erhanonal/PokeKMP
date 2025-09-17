@@ -67,7 +67,7 @@ fun PokemonDetailScreenContent(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = (state as? PokemonDetailUiState.Success)?.pokemonName.orEmpty()
+                        text = (state as? PokemonDetailUiState.Success)?.model?.name.orEmpty()
                             .replaceFirstChar { it.uppercase() },
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
@@ -211,7 +211,7 @@ private fun PokemonDetailScreenSuccess(state: PokemonDetailUiState.Success) {
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = state.pokemonName.first().toString().uppercase(),
+                        text = state.model.name.first().toString().uppercase(),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -221,7 +221,7 @@ private fun PokemonDetailScreenSuccess(state: PokemonDetailUiState.Success) {
                 Spacer(modifier = Modifier.height(SpacingValue.X6))
 
                 Text(
-                    text = state.pokemonName.replaceFirstChar { it.uppercase() },
+                    text = state.model.name.replaceFirstChar { it.uppercase() },
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,

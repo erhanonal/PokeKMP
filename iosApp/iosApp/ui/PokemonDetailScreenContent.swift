@@ -9,7 +9,7 @@ class IOSNativeViewFactory: NativeViewFactory {
         pokemonName: String,
         onBackClick: @escaping () -> Void
     ) -> UIViewController {
-        let viewModel = PokemonDetailViewModel()
+        let viewModel : PokemonDetailViewModel = get()
         let wrapper = PokemonDetailViewModelWrapper(viewModel: viewModel, pokemonName: pokemonName)
         let view = PokemonDetailScreen(wrapper: wrapper, onBackClick: onBackClick)
         let hosting = UIHostingController(rootView: view)
@@ -45,7 +45,7 @@ struct PokemonDetailScreen: View {
         case is PokemonDetailUiStateError:
             PokemonDetailErrorView()
         case let success as PokemonDetailUiStateSuccess:
-            PokemonDetailSuccessView(pokemonName: success.pokemonName)
+            PokemonDetailSuccessView(displayName: success.model.displayName)
         default:
             Text("Unknown state")
                 .foregroundColor(.gray)
@@ -56,7 +56,7 @@ struct PokemonDetailScreen: View {
 
     private var title: String {
         if let success = wrapper.state as? PokemonDetailUiStateSuccess {
-            return success.pokemonName.prefix(1).capitalized + success.pokemonName.dropFirst()
+            return success.model.displayName
         }
         return ""
     }
@@ -93,7 +93,7 @@ struct PokemonDetailErrorView: View {
 }
 
 struct PokemonDetailSuccessView: View {
-    let pokemonName: String
+    let displayName: String
 
     var body: some View {
         VStack(spacing: 16) {
@@ -101,12 +101,12 @@ struct PokemonDetailSuccessView: View {
                 .fill(Color.orange.opacity(0.2))
                 .frame(width: 120, height: 120)
                 .overlay(
-                    Text(pokemonName.prefix(1).uppercased())
+                    Text(displayName.prefix(1))
                         .font(.system(size: 48, weight: .bold))
                         .foregroundColor(.orange)
                 )
 
-            Text(pokemonName.prefix(1).capitalized + pokemonName.dropFirst())
+            Text(displayName)
                 .font(.title)
                 .fontWeight(.bold)
 
