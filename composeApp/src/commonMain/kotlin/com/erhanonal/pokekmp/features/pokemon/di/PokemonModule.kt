@@ -4,6 +4,7 @@ import com.erhanonal.pokekmp.features.pokemon.data.repository.PokemonRepositoryI
 import com.erhanonal.pokekmp.features.pokemon.data.service.PokemonService
 import com.erhanonal.pokekmp.features.pokemon.domain.repository.PokemonRepository
 import com.erhanonal.pokekmp.features.pokemon.domain.usecase.GetPokemonListUseCase
+import com.erhanonal.pokekmp.features.pokemon.presentation.pokemondetail.PokemonDetailViewModel
 import com.erhanonal.pokekmp.features.pokemon.presentation.pokemonlist.PokemonListViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -19,4 +20,5 @@ val pokemonModule = module {
 
     // Presentation
     viewModel { PokemonListViewModel(get()) }
+    viewModel { PokemonDetailViewModel() }
 }
