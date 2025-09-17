@@ -45,7 +45,7 @@ struct PokemonDetailScreen: View {
         case is PokemonDetailUiStateError:
             PokemonDetailErrorView()
         case let success as PokemonDetailUiStateSuccess:
-            PokemonDetailSuccessView(displayName: success.model.displayName)
+            PokemonDetailSuccessView(displayName: success.model.displayName, imageUrl: success.model.imageUri)
         default:
             Text("Unknown state")
                 .foregroundColor(.gray)
@@ -94,17 +94,22 @@ struct PokemonDetailErrorView: View {
 
 struct PokemonDetailSuccessView: View {
     let displayName: String
+    let imageUrl: String
 
     var body: some View {
         VStack(spacing: 16) {
-            Circle()
-                .fill(Color.orange.opacity(0.2))
-                .frame(width: 120, height: 120)
-                .overlay(
-                    Text(displayName.prefix(1))
-                        .font(.system(size: 48, weight: .bold))
-                        .foregroundColor(.orange)
-                )
+
+            AsyncImage(url: URL(string: imageUrl)) { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 80, height: 80)
+                    .background(
+                        Circle().fill(Color.primary.opacity(0.2))
+                    )
+            } placeholder: {
+                EmptyView()
+            }
 
             Text(displayName)
                 .font(.title)

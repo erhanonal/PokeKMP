@@ -29,9 +29,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
 import com.erhanonal.pokekmp.common.theme.SpacingValue
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -201,22 +203,17 @@ private fun PokemonDetailScreenSuccess(state: PokemonDetailUiState.Success) {
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(SpacingValue.X8)
             ) {
-                Box(
+                AsyncImage(
+                    model = state.model.imageUri,
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .size(SpacingValue.X20)
                         .background(
                             MaterialTheme.colorScheme.primaryContainer,
                             shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = state.model.name.first().toString().uppercase(),
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
+                        )
+                )
 
                 Spacer(modifier = Modifier.height(SpacingValue.X6))
 
