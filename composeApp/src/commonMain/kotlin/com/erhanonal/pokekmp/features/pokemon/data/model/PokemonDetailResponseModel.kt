@@ -8,7 +8,9 @@ data class PokemonDetailResponseModel(
     @SerialName("name")
     val name: String,
     @SerialName("sprites")
-    val sprites: SpritesModel
+    val sprites: SpritesModel,
+    @SerialName("types")
+    val types: List<TypeSlotModel>
 )
 
 @Serializable
@@ -27,4 +29,16 @@ data class OtherSpritesModel(
 data class OfficialArtworkModel(
     @SerialName("front_default")
     val frontDefault: String
+)
+
+@Serializable
+data class TypeSlotModel(
+    @SerialName("type")
+    val type: TypeModel
+)
+
+@Serializable
+data class TypeModel(
+    @SerialName("name")
+    val name: String
 )

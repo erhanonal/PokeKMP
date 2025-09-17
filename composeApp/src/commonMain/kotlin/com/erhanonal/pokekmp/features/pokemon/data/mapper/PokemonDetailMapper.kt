@@ -27,7 +27,8 @@ object PokemonDetailMapper {
     private fun PokemonDetailResponseModel.toDomainModel(): PokemonDetailModel {
         return PokemonDetailModel(
             name = name,
-            imageUri = sprites.other.officialArtwork.frontDefault
+            imageUri = sprites.other.officialArtwork.frontDefault,
+            types = types.map { typeSlotModel -> typeSlotModel.type.name }
         )
     }
 }

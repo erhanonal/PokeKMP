@@ -9,5 +9,6 @@ sealed interface PokemonDetailUiState {
 data class PokemonDetailUiModel(
     val name: String,
     val displayName: String,
-    val imageUri: String
+    val imageUri: String,
+    val types: List<String>
 )
